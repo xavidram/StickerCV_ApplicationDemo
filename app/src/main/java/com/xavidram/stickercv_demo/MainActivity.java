@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     private CameraBridgeViewBase openCvCameraView;
     private CascadeClassifier cascadeClassifier;
     private Mat grayscaleImage;
-    private int absolutestickerSize;
     private static final String TAG = "MainActivity";
 
     static {
@@ -100,17 +99,12 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     @Override
     public void onCameraViewStarted(int width, int height) {
         grayscaleImage = new Mat(height, width, CvType.CV_8UC4);
-
-
-        // The stickers will be a 20% of the height of the screen
-        absolutestickerSize = (int) (height * 0.2);
     }
 
 
     @Override
     public void onCameraViewStopped() {
     }
-
 
     @Override
     public Mat onCameraFrame(Mat aInputFrame) {
@@ -120,18 +114,9 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         MatOfRect stickers = new MatOfRect();
 
-
-        // Use the classifier to detect stickers
-        /* Old cascade find
-        if (cascadeClassifier != null) {
-            cascadeClassifier.detectMultiScale(grayscaleImage, stickers, 1.2, 5, 2,
-                    new Size(absolutestickerSize, absolutestickerSize), new Size());
-        }
-        */
         if(cascadeClassifier != null) {
             cascadeClassifier.detectMultiScale(grayscaleImage, stickers, 1.3,5,2,new Size(10,10),new Size(100,100));
         }
-
 
         // If there are any stickers found, draw a rectangle around it
         Rect[] stickersArray = stickers.toArray();
